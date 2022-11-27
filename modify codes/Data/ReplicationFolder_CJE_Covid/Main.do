@@ -94,8 +94,12 @@ APPENDIX TABLES
 	global D2_pathway "C:/Users/derek/Dropbox"
 	global D3_pathway "C:/Users/Derek Mikola/Dropbox/ARCHIVE_COVID_Papers/Covid-19 Canada/Final_ReplicationFolder/Data"
 	
+	* add the location for my code
+	global pathway "/Users/yushi/Documents/Github/replication-challenge/modify codes/Data"
+	
 /* Set the pathway */
-	global masterPathway "$D3_pathway" // 											
+	//global masterPathway "$D3_pathway" // 
+	global masterPathway "$pathway"
 	
 /* Change the pathway */
 	cd "${masterPathway}"
@@ -121,6 +125,36 @@ APPENDIX TABLES
 	
 /* Install any packages locally */
 	sysdir set PERSONAL "${adoBase}"
+	
+*** Add the log file ***
+local c_date = c(current_date)
+local cdate = subinstr("`c_date'", " ", "_", .)
+local logprefix "logfile" // could be "myprog" or something else or could come from the main program 
+cap log using "`logprefix'_`cdate'.log", replace text
+
+
+*** Add the missing package ***
+* grstyle doesn't work, still doesn't work
+* boottest not working if you don't include
+
+
+program main
+	* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	* Add required packages from SSC to this list
+	* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	local ssc_packages grstyle boottest ///
+	    
+    if !missing("`ssc_packages'") {
+        foreach pkg in `ssc_packages' {
+			capture which `pkg'
+			if _rc == 111 {			
+				dis "Installing `pkg'"
+                ssc install `pkg', replace
+			}
+        }
+    }
+
+end
 
 /*------------------------------------------------------------------------------
 *

@@ -77,6 +77,9 @@ cd "$masterPathway"
  /* 
 	Derek's Style 
  */
+ 
+*** The following few lines not working, so I commented them out. Since it's just a matter of graph style, nothing important
+/* 
 	set scheme sj 	
 	
 	grstyle init 
@@ -84,7 +87,7 @@ cd "$masterPathway"
 	grstyle set color s2, opacity(75): p#lineplot
 	grstyle set linewidth 3pt: plineplot
 	grstyle set plain 
-	
+*/	
 	
 /* Four different conditions - OLD - FROM THE ORIGINAL SUBMISSION 
 *NOTE! These change because of the different conditions1
@@ -231,7 +234,10 @@ recode K_prov (10/13 = 1 "Atlantic Canada") (24 = 2 "Ouebec") (35 = 3 "Ontario")
 	(46/47 = 4 "Manitoba/Saskatchewan") (48 = 5 "Alberta") (59 = 6 "British Columbia") ///
 	, gen(altProvinces)
 
-// Aggregate Hours Worked and Aggregate Wages 
+// Aggregate Hours Worked and Aggregate Wages
+
+*** The following few lines not working, so I commented them out. Since it's just a matter of graph style, nothing important
+/*
 	set scheme sj 	
 	
 	grstyle init 
@@ -239,6 +245,7 @@ recode K_prov (10/13 = 1 "Atlantic Canada") (24 = 2 "Ouebec") (35 = 3 "Ontario")
 	grstyle set color s2, opacity(75): p#lineplot
 	grstyle set linewidth 3pt: plineplot
 	grstyle set plain 
+*/
 	
 /* Four different conditions */
 local  conditions1 "if K_lfsstat != 3 & K_age_12 <= 10" //3 means someone is out of the labour force 
@@ -374,7 +381,9 @@ foreach x in w_unemp w_lfpartic alt_hours_actual alt_wages{
 	grstyle clear 
 
 	
-// Canada Graphs  
+// Canada Graphs
+*** The following few lines not working, so I commented them out. Since it's just a matter of graph style, nothing important
+/*
 	set scheme sj 	
 	
 	grstyle init 
@@ -382,6 +391,7 @@ foreach x in w_unemp w_lfpartic alt_hours_actual alt_wages{
 	grstyle set color s2, opacity(75): p#lineplot
 	grstyle set linewidth 3pt: plineplot
 	grstyle set plain 
+*/
 	
 /* Four different conditions */
 local  conditions1 "if K_lfsstat != 3 & K_age_12 <= 10" //3 means someone is out of the labour force 
