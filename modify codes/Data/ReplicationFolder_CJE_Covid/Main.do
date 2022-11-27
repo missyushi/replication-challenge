@@ -305,7 +305,7 @@ does not already exist.
 	do "ReplicationFolder_CJE_Covid/DoFiles/Tables_SummaryStatistics_demographics.do"
 	
 	
-// Tables 5 + 6 - ( Unemp + LFP X {Canada, (Qc, On, Ab, Bc)} ) 
+// Tables 4 + 5 - ( Unemp + LFP X {Canada, (Qc, On, Ab, Bc)} ) 
 /*
 	IMPORTANT NOTE: THE BOOTSTRAPPED and MULTIWAY STANDARD ERRORS NEED TO BE 
 	MOVED IN THE LATEX DOCUMENT FOR THE PDF to PROPERLY COMPILE 
