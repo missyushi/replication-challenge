@@ -1,0 +1,2032 @@
+
+. 
+. 
+. *** Add the missing package ***
+. * grstyle doesn't work, still doesn't work
+. * boottest not working if you don't include
+. 
+. 
+. program main
+  1.         * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.         * Add required packages from SSC to this list
+.         * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.         local ssc_packages grstyle boottest palettes colrspace ///
+>             
+  2.     if !missing("`ssc_packages'") {
+  3.         foreach pkg in `ssc_packages' {
+  4.                         capture which `pkg'
+  5.                         if _rc == 111 {                 
+  6.                                 dis "Installing `pkg'"
+  7.                 ssc install `pkg', replace
+  8.                         }
+  9.         }
+ 10.     }
+ 11. 
+. end
+
+. 
+end of do-file
+
+. do "/var/folders/kc/wn0gf9q114q4rh22fmt6x6qm0000gn/T//SD90332.000000"
+
+. do "ReplicationFolder_CJE_Covid/DoFiles/Figures_CasesAndMortalities.do"
+
+. /*
+>         Making Figures By Province
+>         
+> January
+> 
+> Version 1 
+>         - All of the old Code 
+>         
+> Version 2
+>         - Only the code that makes graphs that we care about 
+> */
+. 
+. 
+. clear   
+
+.         
+. /* Timer */     
+.         timer on 9
+
+.         
+. /*------------------------------------------------------------------------------        
+> *
+> * Cases
+> *
+> ------------------------------------------------------------------------------*/
+. // OLD DATA SOURCE      import delimited "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/timeseries_p
+> rov/cases_timeseries_prov.csv"
+. // NEW DATA SOURCE      import delimited "https://raw.githubusercontent.com/ccodwg/Covid19Canada/master/timeseries_prov
+> /cases_timeseries_prov.csv"
+.         import delimited "ReplicationFolder_CJE_Covid/Data/cases_timeseries_prov_April3.csv"
+(encoding automatically selected: ISO-8859-1)
+(4 vars, 6,076 obs)
+
+.         
+. // Create province categorical variables out of the string      
+.         encode province, gen(prov)
+
+. 
+. // See what it looks like       
+.         tab prov
+
+         prov |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+      Alberta |        434        7.14        7.14
+           BC |        434        7.14       14.29
+     Manitoba |        434        7.14       21.43
+           NL |        434        7.14       28.57
+          NWT |        434        7.14       35.71
+New Brunswick |        434        7.14       42.86
+  Nova Scotia |        434        7.14       50.00
+      Nunavut |        434        7.14       57.14
+      Ontario |        434        7.14       64.29
+          PEI |        434        7.14       71.43
+       Quebec |        434        7.14       78.57
+  Repatriated |        434        7.14       85.71
+ Saskatchewan |        434        7.14       92.86
+        Yukon |        434        7.14      100.00
+--------------+-----------------------------------
+        Total |      6,076      100.00
+
+.         tab prov, nolabel
+
+       prov |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |        434        7.14        7.14
+          2 |        434        7.14       14.29
+          3 |        434        7.14       21.43
+          4 |        434        7.14       28.57
+          5 |        434        7.14       35.71
+          6 |        434        7.14       42.86
+          7 |        434        7.14       50.00
+          8 |        434        7.14       57.14
+          9 |        434        7.14       64.29
+         10 |        434        7.14       71.43
+         11 |        434        7.14       78.57
+         12 |        434        7.14       85.71
+         13 |        434        7.14       92.86
+         14 |        434        7.14      100.00
+------------+-----------------------------------
+      Total |      6,076      100.00
+
+. 
+. // Recode the provinces so that they are in order from East to West     
+.         recode prov (5 8 14 12 = . ) (1 = 48 "Alberta") (2 = 59 "British Columbia") (3 = 46 "Manitoba") ///
+>                 (11 = 24 "Quebec") (13 = 47 "Saskatchewan") (6 = 13 "New Brunswick") (10 = 11 "Prince Edward Island") /
+> //
+>                  (7 = 12 "Nova Scotia") (9 = 35 "Ontario") ///
+>                 (4 = 10 "Newfoundland and Labrador") ///
+>                 , gen(provNumbers)
+(6076 differences between prov and provNumbers)
+
+. 
+. // Again, checking that everything is correct           
+.         tab prov
+
+         prov |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+      Alberta |        434        7.14        7.14
+           BC |        434        7.14       14.29
+     Manitoba |        434        7.14       21.43
+           NL |        434        7.14       28.57
+          NWT |        434        7.14       35.71
+New Brunswick |        434        7.14       42.86
+  Nova Scotia |        434        7.14       50.00
+      Nunavut |        434        7.14       57.14
+      Ontario |        434        7.14       64.29
+          PEI |        434        7.14       71.43
+       Quebec |        434        7.14       78.57
+  Repatriated |        434        7.14       85.71
+ Saskatchewan |        434        7.14       92.86
+        Yukon |        434        7.14      100.00
+--------------+-----------------------------------
+        Total |      6,076      100.00
+
+.         tab prov, nolab
+
+       prov |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |        434        7.14        7.14
+          2 |        434        7.14       14.29
+          3 |        434        7.14       21.43
+          4 |        434        7.14       28.57
+          5 |        434        7.14       35.71
+          6 |        434        7.14       42.86
+          7 |        434        7.14       50.00
+          8 |        434        7.14       57.14
+          9 |        434        7.14       64.29
+         10 |        434        7.14       71.43
+         11 |        434        7.14       78.57
+         12 |        434        7.14       85.71
+         13 |        434        7.14       92.86
+         14 |        434        7.14      100.00
+------------+-----------------------------------
+      Total |      6,076      100.00
+
+.         tab provNumbers
+
+           RECODE of prov |      Freq.     Percent        Cum.
+--------------------------+-----------------------------------
+Newfoundland and Labrador |        434       10.00       10.00
+     Prince Edward Island |        434       10.00       20.00
+              Nova Scotia |        434       10.00       30.00
+            New Brunswick |        434       10.00       40.00
+                   Quebec |        434       10.00       50.00
+                  Ontario |        434       10.00       60.00
+                 Manitoba |        434       10.00       70.00
+             Saskatchewan |        434       10.00       80.00
+                  Alberta |        434       10.00       90.00
+         British Columbia |        434       10.00      100.00
+--------------------------+-----------------------------------
+                    Total |      4,340      100.00
+
+.         tab provNumbers, nolab
+
+  RECODE of |
+       prov |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         10 |        434       10.00       10.00
+         11 |        434       10.00       20.00
+         12 |        434       10.00       30.00
+         13 |        434       10.00       40.00
+         24 |        434       10.00       50.00
+         35 |        434       10.00       60.00
+         46 |        434       10.00       70.00
+         47 |        434       10.00       80.00
+         48 |        434       10.00       90.00
+         59 |        434       10.00      100.00
+------------+-----------------------------------
+      Total |      4,340      100.00
+
+. 
+. /* NUMBER OF CASES */
+.         preserve 
+
+. 
+. // Doing the cases 
+.         keep if cases != .
+(0 observations deleted)
+
+.         
+. // Start breaking down the strings day-month-year 
+.         split date_report, parse("-")
+variables created as string: 
+date_report1  date_report2  date_report3
+
+. 
+. // Rename parts of the date     
+.         rename (date_report1 date_report2 date_report3) (day month year)
+
+. 
+. // Destring the string 
+.         destring day month year, replace
+day: all characters numeric; replaced as byte
+month: all characters numeric; replaced as byte
+year: all characters numeric; replaced as int
+
+. 
+. // Create a new time-series variables   
+.         gen monthDayYear = mdy(month, day, year)
+
+.         clonevar rawDate = monthDayYear
+
+.         format monthDayYear %td
+
+. 
+. // Order and sort the variable  
+.         order province monthDayYear day month year cases 
+
+.         sort province monthDayYear day month year cases 
+
+. 
+. // COLLAPSE INTO CUMULATIVE CASES BY PROVINCE X DAY 
+.         collapse (sum) cumulative_cases, by(provNumbers monthDayYear)
+
+. 
+.         // Label the new variable.      
+.                 label variable cumulative_cases "Daily Cumulative Cases"
+
+. 
+.         // Keep only provinces
+.                 keep if provNumbers != . 
+(434 observations deleted)
+
+. 
+.         // Generate the logarithm of the cumulative cases       
+.                 gen logCumCases = log10(1 + cumulative_cases)
+
+.                 
+.         // Label the variable for logarithm 
+.                 label variable logCumCases "Daily Cumulative Cases (Log-base 10)"
+
+. 
+.         /* Taylor's Style */
+.         // ssc install blindschemes, replace 
+.                 set scheme plotplain
+
+.                 xtset provNumbers monthDayYear, daily 
+
+Panel variable: provNumbers (strongly balanced)
+ Time variable: monthDayYear, 25jan2020 to 02apr2021
+         Delta: 1 day
+
+. 
+.                 
+.         // CASES, All Provinces, Linear 
+.                 xtline cumulative_cases ///
+>                         if inrange(monthDayYear, mdy(1,1,2020), mdy(12,31,2020)) ///
+>                         , overlay ///
+>                         xtitle("", margin(medium)) ///
+>                         ytitle(, margin(medium))  ///
+>                         tlabel(31Jan2020 "Jan. 31, 2020" 31Jul2020 "Jul. 31 2020" 31Dec2020 "Dec. 31, 2020")
+
+. 
+.         // Export the graph to the new location 
+.                 graph export "ReplicationFolder_CJE_Covid/Figures/CumCases_allProv.pdf", as(pdf) replace        
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/CumCases_allProv.pdf saved as PDF format
+
+. 
+.                 
+.                 
+.         // CASES, All Province, Logarithmic 
+.                 xtline logCumCases ///
+>                         if inrange(monthDayYear, mdy(1,1,2020), mdy(12,31,2020)) ///
+>                         , overlay ///
+>                         xtitle("", margin(medium)) ///
+>                         ytitle(, margin(medium)) ylabel(0 "0" 1 "10" 2 "100" 3 "1,000" 3.69897000434 "5,000" 4 "10,000"
+>  4.39794001 "25,000" 5 "100,000" 6 "1,000,000")    ///
+>                         tlabel(31Jan2020 "Jan. 31, 2020" 31Jul2020 "Jul. 31 2020" 31Dec2020 "Dec. 31, 2020")
+
+.                 
+.                 graph export "ReplicationFolder_CJE_Covid/Figures/logCumCases_allProv.pdf", as(pdf) replace
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/logCumCases_allProv.pdf saved as PDF format
+
+.                 
+.                 
+.                 
+.         // CASES, Four Largest Provinces, Linear
+.                 xtline cumulative_cases ///
+>                         if      ( inlist(provNumbers, 59, 48, 35, 24) ) & ( inrange(monthDayYear, mdy(1,1,2020), mdy(12
+> ,31,2020)) ) ///
+>                         , overlay ///
+>                         plot1opts(lp(solid) lw(medthick) lc(gs3)) ///
+>                         plot2opts(lp(dash) lw(medthick) lc(gs3)) ///
+>                         plot3opts(lp("...-..") lw(medthick) lc(gs3)) ///
+>                         plot4opts(lp("._.") lw(medthick) lc(gs3)) ///
+>                         xtitle("", margin(medium)) ///
+>                         ytitle(, margin(medium))   ///
+>                         tlabel(31Jan2020 "Jan. 31, 2020" 31Jul2020 "Jul. 31 2020" 31Dec2020 "Dec. 31, 2020")
+
+.                                 
+.                 graph export "ReplicationFolder_CJE_Covid/Figures/CumCases_4Prov.pdf", as(pdf) replace          
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/CumCases_4Prov.pdf saved as PDF format
+
+. 
+. 
+.         // CASES, Four Largest Provinces, Logarithmic
+.                 xtline logCumCases ///
+>                         if      ( inlist(provNumbers, 59, 48, 35, 24) ) ///
+>                         &       ( inrange(monthDayYear, mdy(1,1,2020), mdy(12,31,2020)) ) ///
+>                         ,       overlay ///
+>                         plot1opts(lp(solid) lw(medthick) lc(gs3)) ///
+>                         plot2opts(lp(dash) lw(medthick) lc(gs3)) ///
+>                         plot3opts(lp("...-..") lw(medthick) lc(gs3)) ///
+>                         plot4opts(lp("._.") lw(medthick) lc(gs3)) ///
+>                         xtitle("", margin(medium)) ///
+>                         ytitle(, margin(medium)) ylabel(0 "0" 1 "10" 2 "100" 3 "1,000" 3.69897000434 "5,000" 4 "10,000"
+>  4.39794001 "25,000" 5 "100,000" 6 "1,000,000")    ///
+>                         tlabel(31Jan2020 "Jan. 31, 2020" 31Jul2020 "Jul. 31 2020" 31Dec2020 "Dec. 31, 2020")
+
+. 
+.                 graph export "ReplicationFolder_CJE_Covid/Figures/logCumCases_4Prov.pdf", as(pdf) replace
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/logCumCases_4Prov.pdf saved as PDF format
+
+. 
+. // Restore the collapsed datasets 
+.         restore 
+
+. 
+. /*------------------------------------------------------------------------------ 
+> *
+> * NUMBER OF DEATHS 
+> *
+> ------------------------------------------------------------------------------*/
+.         clear 
+
+.         
+. // OLD DATASET CALL     import delimited "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/timeseries_p
+> rov/mortality_timeseries_prov.csv"
+. // NEW DATASET CALL import delimited "https://raw.githubusercontent.com/ccodwg/Covid19Canada/master/timeseries_prov/mor
+> tality_timeseries_prov.csv"
+.         import delimited "ReplicationFolder_CJE_Covid/Data/mortality_timeseries_prov_April3.csv"
+(encoding automatically selected: ISO-8859-1)
+(4 vars, 5,474 obs)
+
+. 
+. // Doing the deaths 
+.         keep if deaths != .
+(0 observations deleted)
+
+.         
+. 
+.         split date_death_report, parse("-")
+variables created as string: 
+date_death~1  date_death~2  date_death~3
+
+. 
+. // 
+.         rename (date_death_report1 date_death_report2 date_death_report3) (day month year)
+
+.         destring day month year, replace
+day: all characters numeric; replaced as byte
+month: all characters numeric; replaced as byte
+year: all characters numeric; replaced as int
+
+. 
+.         gen monthDayYear = mdy(month, day, year)
+
+.         format monthDayYear %td
+
+. 
+. // order province health_region monthDayYear day month year deaths 
+. // sort province health_region monthDayYear day month year deaths 
+. 
+.         unique province 
+Number of unique values of province is  14
+Number of records is  5474
+
+. 
+.         label variable cumulative_deaths "Daily Cumulative Deaths"
+
+. 
+. /* Taylor's Style */
+. // ssc install blindschemes, replace 
+.         set scheme plotplain
+
+. 
+. // Make the provinces have numbers. 
+.         encode province, gen(provNum)
+
+. 
+. // Recode the provinces so it is in order from east to west 
+.         recode provNum (5 8 12 14 = . ) (1 = 48 "Alberta") (2 = 59 "British Columbia") (3 = 46 "Manitoba") ///
+>                 (11 = 24 "Quebec") (13 = 47 "Saskatchewan") (6 = 13 "New Brunswick") (10 = 11 "Prince Edward Island") /
+> //
+>                  (7 = 12 "Nova Scotia") (9 = 35 "Ontario") ///
+>                 (4 = 10 "Newfoundland and Labrador") ///
+>                 , gen(provNumbers)
+(5474 differences between provNum and provNumbers)
+
+. 
+. // Eliminate the redundant variable
+.         drop provNum
+
+.         drop if provNumbers == . 
+(1,564 observations deleted)
+
+.         
+. // Declare the datasets as panel 
+.         xtset provNumbers monthDayYear, daily 
+
+Panel variable: provNumbers (strongly balanced)
+ Time variable: monthDayYear, 08mar2020 to 02apr2021
+         Delta: 1 day
+
+. 
+.         collapse (sum) cumulative_deaths, by(provNumbers monthDayYear)
+
+. 
+.         gen logCumdeaths = log10(1 + cumulative_deaths)
+
+.         label variable logCumdeaths "Daily Cumulative Deaths (Log-base 10)"
+
+.         
+. // DEATHS, All Provinces, Linear
+.         xtline cumulative_deaths ///
+>                 if inrange(monthDayYear, mdy(1,1,2020), mdy(12,31,2020)) ///
+>                 , overlay ///
+>                 xtitle("", margin(medium)) ///
+>                 ytitle(, margin(medium))   ///
+>                 tlabel(31Jan2020 "Jan. 31, 2020" 31Jul2020 "Jul. 31 2020" 31Dec2020 "Dec. 31, 2020")    
+
+. 
+.         graph export "ReplicationFolder_CJE_Covid/Figures/Cumdeaths_allProv.pdf", as(pdf) replace       
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/Cumdeaths_allProv.pdf saved as PDF format
+
+. 
+. 
+. 
+. // DEATHS, All Provinces, Logarithmic 
+.         xtline logCumdeaths ///
+>                 if inrange(monthDayYear, mdy(1,1,2020), mdy(12,31,2020)) ///
+>                 , overlay ///
+>                 xtitle("", margin(medium)) ///
+>                 ytitle(, margin(medium)) ylabel(0 "0" 1 "10" 2 "100" 3 "1,000" 3.69897000434 "5,000" 4 "10,000")  ///
+>                 tlabel(31Jan2020 "Jan. 31, 2020" 31Jul2020 "Jul. 31 2020" 31Dec2020 "Dec. 31, 2020")
+
+.         
+.         graph export "ReplicationFolder_CJE_Covid/Figures/logCumdeaths_allProv.pdf", as(pdf) replace
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/logCumdeaths_allProv.pdf saved as PDF format
+
+.         
+. 
+. 
+. // DEATHS, Four Largest Provinces, Linear 
+.         xtline cumulative_deaths ///
+>                 if      ( inlist(provNumbers, 59, 48, 35, 24) ) ///
+>                 &       ( inrange(monthDayYear, mdy(1,1,2020), mdy(12,31,2020)) ) ///
+>                 ,       overlay ///
+>                 plot1opts(lp(solid) lw(medthick) lc(gs3)) ///
+>                 plot2opts(lp(dash) lw(medthick) lc(gs3)) ///
+>                 plot3opts(lp("...-..") lw(medthick) lc(gs3)) ///
+>                 plot4opts(lp("._.") lw(medthick) lc(gs3)) ///
+>                 /// legend(order(4 "Quebec" 3 "Ontario" 1 "Alberta" 2 "British Columbia")) /// 
+>                 xtitle("", margin(medium)) ///
+>                 ytitle(, margin(medium))   ///
+>                 tlabel(31Jan2020 "Jan. 31, 2020" 31Jul2020 "Jul. 31 2020" 31Dec2020 "Dec. 31, 2020")
+
+. 
+.         graph export "ReplicationFolder_CJE_Covid/Figures/Cumdeaths_4Prov.pdf", as(pdf) replace         
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/Cumdeaths_4Prov.pdf saved as PDF format
+
+.         
+. 
+.         
+. // DEATHS, Four Largest Provinces, Logarithmic 
+.         xtline logCumdeaths ///
+>                 if      ( inlist(provNumbers, 59, 48, 35, 24) ) ///
+>                 &       ( inrange(monthDayYear, mdy(1,1,2020), mdy(12,31,2020)) ) ///
+>                 ,       overlay ///
+>                 plot1opts(lp(solid) lw(medthick) lc(gs3)) ///
+>                 plot2opts(lp(dash) lw(medthick) lc(gs3)) ///
+>                 plot3opts(lp("...-..") lw(medthick) lc(gs3)) ///
+>                 plot4opts(lp("._.") lw(medthick) lc(gs3)) ///
+>                 /// legend(order(4 "Quebec" 3 "Ontario" 1 "Alberta" 2 "British Columbia")) /// 
+>                 xtitle("", margin(medium)) ///
+>                 ytitle(, margin(medium)) ylabel(0 "0" 1 "10" 2 "100" 3 "1,000" 3.69897000434 "5,000" 4 "10,000")  ///
+>                 tlabel(31Jan2020 "Jan. 31, 2020" 31Jul2020 "Jul. 31 2020" 31Dec2020 "Dec. 31, 2020")
+
+. 
+.         graph export "ReplicationFolder_CJE_Covid/Figures/logCumdeaths_4Prov.pdf", as(pdf) replace
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/logCumdeaths_4Prov.pdf saved as PDF format
+
+.                 
+.                 
+. /* timer off */
+.         timer off 9
+
+.         timer list 
+   1:      0.00 /        1 =       0.0000
+   9:      3.27 /        1 =       3.2740
+
+. 
+end of do-file
+
+. 
+end of do-file
+
+. do "/var/folders/kc/wn0gf9q114q4rh22fmt6x6qm0000gn/T//SD90332.000000"
+
+.         do "ReplicationFolder_CJE_Covid/DoFiles/Figures_TimeSeriesAndBubbles.do"
+
+. /*
+>         Figures
+>                                                                                                                    Mond
+> ay, March 1, 2021
+>                                                                                   
+> Overview:
+> 
+>         Try and replicate the figures from the US paper. 
+>         
+>         The code will have the following flavour:
+>                 (a) The first set of loops recreates the American Paper loops 
+>                 (b) The second set of loops creates the aggregate hours worked and earnings
+>                 
+>         Then we will create and individual graphs. 
+>                 clear all 
+> 
+> 
+> Version 2
+>         - Updating for the revise and resubmit          
+>         - Making sure the axes make sense (They didn't before)
+>         - Changing the age group to less than 55 
+>                 
+> Version 3 
+>         - The age groups will be less than 69 for the whole analysis now
+>         
+> Version 4
+>         - The age groups will be 15 - 64 for now.
+>         - Marital Status will be updated to include common-law as a variable
+>         - New Age Group Categories 
+> 
+> Version 5 (March 4, 2021)
+>         - Calls the new dataset so we don't have this mess of variable declarations
+>                 at the beginning
+>         - March 5 2021: use the most up-to-date .dta file 
+>         
+> Version 6 (March 5, 2021)
+>         - Calls the new dataset 8Mar2021
+>         
+> Version 7 (March 5, 2021)
+>         - Calls the new dataset 30Mar2021
+>         
+> global D1_pathway "C:\Users\Derek Mikola\Dropbox"
+> global LP_pathway ""
+> global A_pathway ""
+> global T_pathway ""
+> 
+> 
+> 
+> cd "$masterPathway"
+> 
+> */
+. 
+.         clear 
+
+. 
+. /* timer on */
+.         timer on 12
+
+.         
+. /* Call the .dta file */        
+.         use "ReplicationFolder_CJE_Covid/Data/dtaFiles/mainDataset.dta"
+(NSDstat generated file)
+
+.         
+. /* FEBRUARY 26, 2021 - KEEPING ONLY VARIABLES WE CARE ABOUT - FOR SPEED */
+.         keep K_prov K_year K_month w_unemp w_lfpartic alt_hours_actual alt_wages ///
+>                 parents sex ageCats ageCats_alt marStat immig ftpt union Educ ysm_immig student ///
+>                 womanWithKids ageByUnion weekEarnQuart selfEmpIncorp median_proximity ///
+>                 median_exposure median_critNumber median_HomeWork women_kidsLessThan6 ///
+>                 women_kids6to12 women_kids13to17 women_kids18to24 K_age_12 K_lfsstat ///
+>                 K_cowmain K_fweight weeklyEarnings K_noc_40 physProx_weightedIndex ///
+>                 exposure_weightedIndex critNumber_weightedIndex HomeWork_weightedIndex ///
+>                 twoDigitSum_LFS marStat_2 ageCats_alt
+
+.         
+. /* Getting to the Figures! */   
+. 
+. /* Taylor's Style
+>         ssc install blindschemes, replace 
+>         set scheme plotplainblind
+>  */
+.  
+.  /* 
+>         Derek's Style 
+>  */
+.  
+. *** The following few lines not working, so I commented them out. Since it's just a matter of graph style, nothing impo
+> rtant
+.  
+.         set scheme sj   
+
+.         
+.         grstyle init 
+
+.         grstyle type 
+#include sj
+
+.         grstyle set color s2, opacity(75): p#lineplot
+
+.         grstyle set linewidth 3pt: plineplot
+
+.         grstyle set plain 
+
+. 
+.         
+. /* Four different conditions - OLD - FROM THE ORIGINAL SUBMISSION 
+> *NOTE! These change because of the different conditions1
+>         local  conditions1 "if K_lfsstat != 3" //3 means someone is out of the labour force 
+>         local  conditions2 ""
+>         local  conditions3 "if K_age_12 <= 10 & K_lfsstat != 3 & K_cowmain <= 2"
+>         local  conditions4 "if K_age_12 <= 10 & K_lfsstat != 3 & K_cowmain <= 2"
+> */
+. 
+. /* 
+>         FOUR CONDITIONS - NEW - for R&R
+>                 - Between 15 and 64. 
+> */
+.         local  conditions1 "if K_lfsstat != 3 & K_age_12 <= 10" //3 means someone is out of the labour force 
+
+.         local  conditions2 "if K_age_12 <= 10"
+
+.         local  conditions3 "if K_age_12 <= 10 & K_lfsstat != 3 & K_cowmain <= 2"
+
+.         local  conditions4 "if K_age_12 <= 10 & K_lfsstat != 3 & K_cowmain <= 2"
+
+.         
+.         
+. /* Weights */
+.         local weights "[pweight = K_fweight]"
+
+. 
+. 
+. // Keep track of what type of collapse we are doing. <2 == rates, >=2 == averages
+.         local counter = 1
+
+. 
+. /* IMPORTANT! OUR REPLACE ALL GRAPHS SWITCH */
+.         local switch "ON" 
+
+. 
+. 
+. foreach x in w_unemp w_lfpartic alt_hours_actual alt_wages{ 
+  2.         foreach z in sex womanWithKids ageCats_alt marStat_2 weekEarnQuart Educ immig ysm_immig ftpt union median_pr
+> oximity median_exposure median_critNumber median_HomeWork{
+  3.                 
+.                 // Check that the graph exists 
+.                 if `counter'==1 {
+  4.                         capture: confirm file "ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_`z'.pdf"
+  5.                 }
+  6.                 else if `counter'==2 {
+  7.                         capture: confirm file "ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_`z'.pdf"
+  8.                 }
+  9.                 else if `counter'==3 {
+ 10.                         capture: confirm file "ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_`z'.pdf"
+ 11.                 }
+ 12.                 else if `counter'==4 {
+ 13.                         capture: confirm file "ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_`z'.pdf"
+ 14.                 }
+ 15.                 
+.                 di _rc
+ 16.                 
+.                 if (_rc != 0) | ( (_rc == 0) & ("`switch'" == "ON") ){
+ 17.                     
+.                     di "The `z' graph doesn't exist OR the switch is on => Create New Graph"    
+ 18.                         
+.                         preserve 
+ 19.                 
+.                         /* The RATES graphs */
+.                         if `counter' <= 2{
+ 20.                                 /* Collapse variables into aggregates */
+.                                 collapse (sum) sum_`x' = `x' (count) count_`x' = `x' `conditions`counter'' `weights', b
+> y(K_year K_month `z')    
+ 21.                                 
+.                                 /* Label the time series */
+.                                 gen yearmonth = ym(K_year, K_month)
+ 22.                                 format yearmonth %tm 
+ 23.                                 
+.                                 /* Set the panel */
+.                                 xtset `z' yearmonth, monthly 
+ 24.                                 
+.                                 /* Generate the rate */
+.                                 gen `x'_rate = (sum_`x'/count_`x')*100 
+ 25.                                 
+.                                 /* 
+>                                 Making the Graphs Prettier 
+>                                 */
+.                                 
+.                                 if `counter' == 1 {
+ 26.                                         xtline `x'_rate, ///
+>                                                 overlay ///
+>                                                 xtitle("", margin(medium)) tlabel(2016m1 2017m1 2018m1 2019m1 2020m1 20
+> 21m1) tmtick(2016m1(1)2021m1) ///
+>                                                 ytitle("Unemployment Rate (%)") yscale(titlegap(*15)) ///
+>                                                 legend(size(small))
+ 27.                                                 
+.                                         graph export "ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_`z'.pdf", as(
+> pdf) replace 
+ 28.                                 }
+ 29.                                 else if `counter' == 2{
+ 30.                                         xtline `x'_rate, ///
+>                                                 overlay ///
+>                                                 xtitle("", margin(medium)) tlabel(2016m1 2017m1 2018m1 2019m1 2020m1 20
+> 21m1) tmtick(2016m1(1)2021m1) ///
+>                                                 ytitle("Labour Force Participation Rate (%)") yscale(titlegap(*15)) ///
+>  
+>                                                 legend(size(small))
+ 31.                                                 
+.                                         graph export "ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_`z'.pdf", as(pdf) r
+> eplace 
+ 32.                                 }
+ 33. 
+.                         }
+ 34.                         /* The AVERAGES graphs */
+.                         else if `counter' > 2{
+ 35.                                 
+.                                 collapse (mean) mean_`x' = `x' `conditions`counter'' `weights', by(K_year K_month `z')
+ 36.                                 
+.                                 /* Label the time series */
+.                                 gen yearmonth = ym(K_year, K_month)
+ 37.                                 format yearmonth %tm 
+ 38.                                 
+.                                 /* Set the panel */
+.                                 xtset `z' yearmonth, monthly 
+ 39.                                 
+.                                 /* There is some issues with selfEmpIncorp */
+.                                 if `counter' == 3 {
+ 40.                                         xtline mean_`x', ///
+>                                                 overlay ///
+>                                                 xtitle("", margin(medium)) tlabel(2016m1 2017m1 2018m1 2019m1 2020m1 20
+> 21m1) tmtick(2016m1(1)2021m1) ///
+>                                                 ytitle("Total Actual Weekly Hours Worked") yscale(titlegap(*15)) ///
+>                                                 legend(size(small))
+ 41.                                                 
+.                                         graph export "ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_`z'.pdf",
+>  as(pdf) replace 
+ 42.                                 }
+ 43.                                 else if `counter' == 4 & "`z'" != "selfEmpIncorp"{
+ 44.                                         xtline mean_`x', ///
+>                                                 overlay ///
+>                                                 xtitle("", margin(medium)) tlabel(2016m1 2017m1 2018m1 2019m1 2020m1 20
+> 21m1) tmtick(2016m1(1)2021m1) ///
+>                                                 ytitle("Real Hourly Wage (2018)") yscale(titlegap(*15)) ///
+>                                                 legend(size(small))
+ 45.                                                 
+.                                         graph export "ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_`z'.pdf", as(pdf
+> ) replace 
+ 46.                                 }
+ 47.                         }
+ 48.                         restore         
+ 49.                 }
+ 50.                 else{
+ 51.                     di " The `z' graph exists and the switch is off"
+ 52.                         di " => No new graph"
+ 53.                 }
+ 54.                 
+.                 *************************       
+.         }
+ 55.         local counter = `counter' + 1
+ 56. }
+601
+The sex graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: sex (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_sex.pdf saved as PDF format
+601
+The womanWithKids graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: womanWithKids (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_womanWithKids.pdf saved as PDF format
+601
+The ageCats_alt graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: ageCats_alt (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_ageCats_alt.pdf saved as PDF format
+601
+The marStat_2 graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: marStat_2 (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_marStat_2.pdf saved as PDF format
+601
+The weekEarnQuart graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: weekEarnQuart (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_weekEarnQuart.pdf saved as PDF format
+601
+The Educ graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: Educ (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_Educ.pdf saved as PDF format
+601
+The immig graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: immig (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_immig.pdf saved as PDF format
+601
+The ysm_immig graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: ysm_immig (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_ysm_immig.pdf saved as PDF format
+601
+The ftpt graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: ftpt (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_ftpt.pdf saved as PDF format
+601
+The union graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: union (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_union.pdf saved as PDF format
+601
+The median_proximity graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_proximity (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_median_proximity.pdf saved as PDF format
+601
+The median_exposure graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_exposure (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_median_exposure.pdf saved as PDF format
+601
+The median_critNumber graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_critNumber (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_median_critNumber.pdf saved as PDF format
+601
+The median_HomeWork graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_HomeWork (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_median_HomeWork.pdf saved as PDF format
+601
+The sex graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: sex (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_sex.pdf saved as PDF format
+601
+The womanWithKids graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: womanWithKids (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_womanWithKids.pdf saved as PDF format
+601
+The ageCats_alt graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: ageCats_alt (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_ageCats_alt.pdf saved as PDF format
+601
+The marStat_2 graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: marStat_2 (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_marStat_2.pdf saved as PDF format
+601
+The weekEarnQuart graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: weekEarnQuart (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_weekEarnQuart.pdf saved as PDF format
+601
+The Educ graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: Educ (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_Educ.pdf saved as PDF format
+601
+The immig graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: immig (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_immig.pdf saved as PDF format
+601
+The ysm_immig graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: ysm_immig (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_ysm_immig.pdf saved as PDF format
+601
+The ftpt graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: ftpt (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_ftpt.pdf saved as PDF format
+601
+The union graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: union (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_union.pdf saved as PDF format
+601
+The median_proximity graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_proximity (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_median_proximity.pdf saved as PDF format
+601
+The median_exposure graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_exposure (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_median_exposure.pdf saved as PDF format
+601
+The median_critNumber graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_critNumber (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_median_critNumber.pdf saved as PDF format
+601
+The median_HomeWork graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_HomeWork (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_median_HomeWork.pdf saved as PDF format
+601
+The sex graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: sex (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_sex.pdf saved as PDF format
+601
+The womanWithKids graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: womanWithKids (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_womanWithKids.pdf saved as PDF format
+601
+The ageCats_alt graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: ageCats_alt (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_ageCats_alt.pdf saved as PDF format
+601
+The marStat_2 graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: marStat_2 (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_marStat_2.pdf saved as PDF format
+601
+The weekEarnQuart graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: weekEarnQuart (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_weekEarnQuart.pdf saved as PDF format
+601
+The Educ graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: Educ (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_Educ.pdf saved as PDF format
+601
+The immig graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: immig (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_immig.pdf saved as PDF format
+601
+The ysm_immig graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: ysm_immig (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_ysm_immig.pdf saved as PDF format
+601
+The ftpt graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: ftpt (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_ftpt.pdf saved as PDF format
+601
+The union graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: union (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_union.pdf saved as PDF format
+601
+The median_proximity graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_proximity (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_median_proximity.pdf saved as PDF format
+601
+The median_exposure graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_exposure (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_median_exposure.pdf saved as PDF format
+601
+The median_critNumber graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_critNumber (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_median_critNumber.pdf saved as PDF format
+601
+The median_HomeWork graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_HomeWork (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_actualHrsWorked_median_HomeWork.pdf saved as PDF format
+601
+The sex graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: sex (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_sex.pdf saved as PDF format
+601
+The womanWithKids graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: womanWithKids (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_womanWithKids.pdf saved as PDF format
+601
+The ageCats_alt graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: ageCats_alt (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_ageCats_alt.pdf saved as PDF format
+601
+The marStat_2 graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: marStat_2 (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_marStat_2.pdf saved as PDF format
+601
+The weekEarnQuart graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: weekEarnQuart (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_weekEarnQuart.pdf saved as PDF format
+601
+The Educ graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: Educ (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_Educ.pdf saved as PDF format
+601
+The immig graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: immig (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_immig.pdf saved as PDF format
+601
+The ysm_immig graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: ysm_immig (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_ysm_immig.pdf saved as PDF format
+601
+The ftpt graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: ftpt (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_ftpt.pdf saved as PDF format
+601
+The union graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: union (weakly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_union.pdf saved as PDF format
+601
+The median_proximity graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_proximity (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_median_proximity.pdf saved as PDF format
+601
+The median_exposure graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_exposure (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_median_exposure.pdf saved as PDF format
+601
+The median_critNumber graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_critNumber (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_median_critNumber.pdf saved as PDF format
+601
+The median_HomeWork graph doesn't exist OR the switch is on => Create New Graph
+
+Panel variable: median_HomeWork (unbalanced)
+ Time variable: yearmonth, 2017m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_median_HomeWork.pdf saved as PDF format
+
+.         
+. 
+. /* Provincial Graphs */
+. 
+. 
+. recode K_prov (10/13 = 1 "Atlantic Canada") (24 = 2 "Ouebec") (35 = 3 "Ontario") ///
+>         (46/47 = 4 "Manitoba/Saskatchewan") (48 = 5 "Alberta") (59 = 6 "British Columbia") ///
+>         , gen(altProvinces)
+(5968760 differences between K_prov and altProvinces)
+
+. 
+. // Aggregate Hours Worked and Aggregate Wages
+. 
+. *** The following few lines not working, so I commented them out. Since it's just a matter of graph style, nothing impo
+> rtant
+. /*
+>         set scheme sj   
+>         
+>         grstyle init 
+>         grstyle type 
+>         grstyle set color s2, opacity(75): p#lineplot
+>         grstyle set linewidth 3pt: plineplot
+>         grstyle set plain 
+> */
+.         
+. /* Four different conditions */
+. local  conditions1 "if K_lfsstat != 3 & K_age_12 <= 10" //3 means someone is out of the labour force 
+
+. local  conditions2 "if K_age_12 <= 10"
+
+. local  conditions3 "if K_age_12 <= 10 & K_lfsstat != 3 & K_cowmain <= 2"
+
+. local  conditions4 "if K_age_12 <= 10 & K_lfsstat != 3 & K_cowmain <= 2"
+
+. 
+. /* Weights */
+. local weights "[pweight = K_fweight]"
+
+. 
+. // Restart the counter 
+. local counter = 1
+
+. 
+. /* IMPORTANT! OUR REPLACE ALL GRAPHS SWITCH */
+. local switch "ON" 
+
+. // This is a switch. If you turn it ON then we will replace all graphs. 
+. // If the switch is OFF it will only create new graphs. 
+. 
+. foreach x in w_unemp w_lfpartic alt_hours_actual alt_wages{
+  2.         foreach z in altProvinces{
+  3.                 
+.                 // Check that the graph exists 
+.                 if `counter'==1 {
+  4.                         capture: confirm file "ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_altProvinces.pdf"
+  5.                 }
+  6.                 else if `counter'==2 {
+  7.                         capture: confirm file "ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_altProvinces.pdf"
+  8.                 }
+  9.                 else if `counter'==3 {
+ 10.                         capture: confirm file "ReplicationFolder_CJE_Covid/Figures/alt_w_actualHrsWorked_altProvince
+> s.pdf"
+ 11.                 }
+ 12.                 else if `counter'==4 {
+ 13.                         capture: confirm file "ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_altProvinces.pdf"
+ 14.                 }
+ 15.                 
+.                 di _rc
+ 16.                 
+.                 if (_rc != 0) | (_rc == 0 & "`switch'" == "ON"){
+ 17.                     
+.                     di "altProvinces"
+ 18.                         di " "
+ 19.                     di " The graphdoesn't exist"
+ 20.                         di " => Create New Graph"       
+ 21.                         
+.                         preserve 
+ 22.                 
+.                         /* The RATES graphs */
+.                         if `counter' <= 2{
+ 23.                                 /* Collapse variables into aggregates */
+.                                 collapse (sum) sum_`x' = `x' (count) count_`x' = `x' `conditions`counter'' `weights', b
+> y(K_year K_month `z')            
+ 24.                                 /* Label the time series */
+.                                 gen yearmonth = ym(K_year, K_month)
+ 25.                                 format yearmonth %tm 
+ 26.                                 
+.                                 /* Set the panel */
+.                                 xtset `z' yearmonth, monthly 
+ 27.                                 
+.                                 di "Here"
+ 28.                                 
+.                                 /* Generate the rate */
+.                                 gen `x'_rate = (sum_`x'/count_`x')*100 
+ 29.                                 
+.                                 /* 
+>                                 Making the Graphs Prettier 
+>                                 */
+.                                 
+.                                 if `counter' == 1 {
+ 30.                                         xtline `x'_rate, ///
+>                                         overlay /// 
+>                                                 xtitle("", margin(medium)) tlabel(2016m1 2017m1 2018m1 2019m1 2020m1 20
+> 21m1) tmtick(2016m1(1)2021m1) ///
+>                                                 ytitle("Unemployment Rate (%)") yscale(titlegap(*15)) ///
+>                                                 legend(size(small))
+ 31.                                                 
+.                                         graph export "ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_altProvinces.
+> pdf", as(pdf) replace
+ 32.                                 }
+ 33.                                 else if `counter' == 2{
+ 34.                                         xtline `x'_rate, ///
+>                                                 overlay /// 
+>                                                 xtitle("", margin(medium)) tlabel(2016m1 2017m1 2018m1 2019m1 2020m1 20
+> 21m1) tmtick(2016m1(1)2021m1) ///
+>                                                 ytitle("Labour Force Participation Rate (%)") yscale(titlegap(*15)) ///
+>                                                 legend(size(small))
+ 35.                                                 
+.                                         graph export "ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_altProvinces.pdf", 
+> as(pdf) replace
+ 36.                                 }
+ 37. 
+.                         }
+ 38.                         /* The AVERAGES graphs */
+.                         else if `counter' > 2 {
+ 39.                                 
+.                                 collapse (mean) mean_`x' = `x' `conditions`counter'' `weights', by(K_year K_month `z')
+ 40.                                 
+.                                 /* Label the time series */
+.                                 gen yearmonth = ym(K_year, K_month)
+ 41.                                 format yearmonth %tm 
+ 42.                                 
+.                                 /* Set the panel */
+.                                 xtset `z' yearmonth, monthly 
+ 43.                                 
+.                                 /* There is some issues with selfEmpIncorp */
+.                                 if `counter' == 3 {
+ 44.                                         xtline mean_`x', ///
+>                                                 overlay ///
+>                                                 xtitle("", margin(medium)) tlabel(2016m1 2017m1 2018m1 2019m1 2020m1 20
+> 21m1) tmtick(2016m1(1)2021m1) ///
+>                                                 ytitle("Total Actual Weekly Hours Worked") yscale(titlegap(*15)) ////
+>                                                 legend(size(small))
+ 45.                                                 
+.                                         graph export "ReplicationFolder_CJE_Covid/Figures/alt_w_actualHrsWorked_altProv
+> inces.pdf", as(pdf) replace
+ 46.                                 }
+ 47.                                 else if `counter' == 4 {
+ 48.                                         xtline mean_`x', ///
+>                                                 overlay /// 
+>                                                 xtitle("", margin(medium)) tlabel(2016m1 2017m1 2018m1 2019m1 2020m1 20
+> 21m1) tmtick(2016m1(1)2021m1) ///
+>                                                 ytitle("Real Hourly Wage (2018)") yscale(titlegap(*15)) ///
+>                                                 legend(size(small))
+ 49.                                                 
+.                                         graph export "ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_altProvinces.pdf
+> ", as(pdf) replace
+ 50.                                 }
+ 51.                         }
+ 52.                         restore         
+ 53.                 }
+ 54.                 else{
+ 55.                     di "altProvinces"
+ 56.                     di " The graph exists and the switch is off"
+ 57.                         di " => No new graph"
+ 58.                         di ""
+ 59.                 }
+ 60.                 
+.                 *************************       
+.         }
+ 61.         local counter = `counter' + 1
+ 62. }
+601
+altProvinces
+ 
+ The graphdoesn't exist
+ => Create New Graph
+
+Panel variable: altProvinces (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+Here
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_altProvinces.pdf saved as PDF format
+601
+altProvinces
+ 
+ The graphdoesn't exist
+ => Create New Graph
+
+Panel variable: altProvinces (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+Here
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_altProvinces.pdf saved as PDF format
+601
+altProvinces
+ 
+ The graphdoesn't exist
+ => Create New Graph
+
+Panel variable: altProvinces (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_actualHrsWorked_altProvinces.pdf saved as PDF format
+601
+altProvinces
+ 
+ The graphdoesn't exist
+ => Create New Graph
+
+Panel variable: altProvinces (strongly balanced)
+ Time variable: yearmonth, 2016m1 to 2020m12
+         Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_altProvinces.pdf saved as PDF format
+
+. 
+.         grstyle clear 
+
+. 
+.         
+. // Canada Graphs
+. *** The following few lines not working, so I commented them out. Since it's just a matter of graph style, nothing impo
+> rtant
+. /*
+>         set scheme sj   
+>         
+>         grstyle init 
+>         grstyle type 
+>         grstyle set color s2, opacity(75): p#lineplot
+>         grstyle set linewidth 3pt: plineplot
+>         grstyle set plain 
+> */
+.         
+. /* Four different conditions */
+. local  conditions1 "if K_lfsstat != 3 & K_age_12 <= 10" //3 means someone is out of the labour force 
+
+. local  conditions2 "if K_age_12 <= 10"
+
+. local  conditions3 "if K_age_12 <= 10 & K_lfsstat != 3 & K_cowmain <= 2"
+
+. local  conditions4 "if K_age_12 <= 10 & K_lfsstat != 3 & K_cowmain <= 2"
+
+. 
+. /* Weights */
+. local weights "[pweight = K_fweight]"
+
+. 
+. // Restart the counter 
+. local counter = 1
+
+. 
+. /* IMPORTANT! OUR REPLACE ALL GRAPHS SWITCH */
+. local switch "ON" 
+
+. // This is a switch. If you turn it ON then we will replace all graphs. 
+. // If the switch is OFF it will only create new graphs. 
+. 
+. 
+. foreach x in w_unemp w_lfpartic alt_hours_actual alt_wages{
+  2.         foreach z in Canada{
+  3.                 
+.                 // Check that the graph exists 
+.                 if `counter'==1 {
+  4.                         capture: confirm file "ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_Canada.pdf"
+  5.                 }
+  6.                 else if `counter'==2 {
+  7.                         capture: confirm file "ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_Canada.pdf"
+  8.                 }
+  9.                 else if `counter'==3 {
+ 10.                         capture: confirm file "ReplicationFolder_CJE_Covid/Figures/alt_w_actualHrsWorked_Canada.pdf"
+ 11.                 }
+ 12.                 else if `counter'==4 {
+ 13.                         capture: confirm file "ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_Canada.pdf"
+ 14.                 }
+ 15.                 
+.                 di _rc
+ 16.                 
+.                 if (_rc != 0) | (_rc == 0 & "`switch'" == "ON"){
+ 17.                     
+.                     di "Canada"
+ 18.                         di " "
+ 19.                     di " The graph doesn't exist or the switch is on"
+ 20.                         di " => Create New Graph"       
+ 21.                         
+.                         preserve 
+ 22.                 
+.                         /* The RATES graphs */
+.                         if `counter' <= 2{
+ 23.                                 /* Collapse variables into aggregates */
+.                                 collapse (sum) sum_`x' = `x' (count) count_`x' = `x' `conditions`counter'' `weights', b
+> y(K_year K_month)                
+ 24.                                 /* Label the time series */
+.                                 gen yearmonth = ym(K_year, K_month)
+ 25.                                 format yearmonth %tm 
+ 26.                                 
+.                                 /* Set the panel */
+.                                 tsset yearmonth, monthly 
+ 27.                                 
+.                                 di "Here"
+ 28.                                 
+.                                 /* Generate the rate */
+.                                 gen `x'_rate = (sum_`x'/count_`x')*100 
+ 29.                                 
+.                                 /* 
+>                                 Making the Graphs Prettier 
+>                                 */
+.                                 
+.                                 if `counter' == 1 {
+ 30.                                         tsline `x'_rate, ///
+>                                                 xtitle("", margin(medium)) tlabel(2016m1 2017m1 2018m1 2019m1 2020m1 20
+> 21m1) tmtick(2016m1(1)2021m1) ///
+>                                                 ytitle("Unemployment Rate (%)") yscale(titlegap(*15)) ///
+>                                                 legend(size(small))
+ 31.                                                 
+.                                         graph export "ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_Canada.pdf", 
+> as(pdf) replace
+ 32.                                 }
+ 33.                                 else if `counter' == 2{
+ 34.                                         tsline `x'_rate, ///
+>                                                 xtitle("", margin(medium)) tlabel(2016m1 2017m1 2018m1 2019m1 2020m1 20
+> 21m1) tmtick(2016m1(1)2021m1) ///
+>                                                 ytitle("Labour Force Participation Rate (%)") yscale(titlegap(*15)) ///
+>                                                 legend(size(small))
+ 35.                                                 
+.                                         graph export "ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_Canada.pdf", as(pdf
+> ) replace
+ 36.                                 }
+ 37. 
+.                         }
+ 38.                         /* The AVERAGES graphs */
+.                         else if `counter' > 2 {
+ 39.                                 
+.                                 collapse (mean) mean_`x' = `x' `conditions`counter'' `weights', by(K_year K_month)
+ 40.                                 
+.                                 /* Label the time series */
+.                                 gen yearmonth = ym(K_year, K_month)
+ 41.                                 format yearmonth %tm 
+ 42.                                 
+.                                 /* Set the panel */
+.                                 tsset yearmonth, monthly 
+ 43.                                 
+.                                 /* There is some issues with selfEmpIncorp */
+.                                 if `counter' == 3 & "Canada" != "selfEmpIncorp"{
+ 44.                                         tsline mean_`x', ///
+>                                                 xtitle("", margin(medium)) tlabel(2016m1 2017m1 2018m1 2019m1 2020m1 20
+> 21m1) tmtick(2016m1(1)2021m1) ///
+>                                                 ytitle("Total Actual Weekly Hours Worked") yscale(titlegap(*15)) ///
+>                                                 legend(size(small))
+ 45.                                                 
+.                                         graph export "ReplicationFolder_CJE_Covid/Figures/alt_w_actualHrsWorked_Canada.
+> pdf", as(pdf) replace
+ 46.                                 }
+ 47.                                 else if `counter' == 4 & "Canada" != "selfEmpIncorp"{
+ 48.                                         tsline mean_`x', ///
+>                                                 xtitle("", margin(medium)) tlabel(2016m1 2017m1 2018m1 2019m1 2020m1 20
+> 21m1) tmtick(2016m1(1)2021m1) ///
+>                                                 ytitle("Real Hourly Wage (2018)") yscale(titlegap(*15)) ///
+>                                                 legend(size(small))
+ 49.                                                 
+.                                         graph export "ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_Canada.pdf", as(
+> pdf) replace
+ 50.                                 }
+ 51.                         }
+ 52.                         restore         
+ 53.                 }
+ 54.                 else{
+ 55.                     di "Canada"
+ 56.                     di " The graph exists and the switch is off"
+ 57.                         di " => No new graph"
+ 58.                         di ""
+ 59.                 }
+ 60.                 
+.                 *************************       
+.         }
+ 61.         local counter = `counter' + 1
+ 62. }       
+601
+Canada
+ 
+ The graph doesn't exist or the switch is on
+ => Create New Graph
+
+Time variable: yearmonth, 2016m1 to 2020m12
+        Delta: 1 month
+Here
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_unempRate_Canada.pdf saved as PDF format
+601
+Canada
+ 
+ The graph doesn't exist or the switch is on
+ => Create New Graph
+
+Time variable: yearmonth, 2016m1 to 2020m12
+        Delta: 1 month
+Here
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_lfp_Canada.pdf saved as PDF format
+601
+Canada
+ 
+ The graph doesn't exist or the switch is on
+ => Create New Graph
+
+Time variable: yearmonth, 2016m1 to 2020m12
+        Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_actualHrsWorked_Canada.pdf saved as PDF format
+601
+Canada
+ 
+ The graph doesn't exist or the switch is on
+ => Create New Graph
+
+Time variable: yearmonth, 2016m1 to 2020m12
+        Delta: 1 month
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/alt_w_hrWage_Canada.pdf saved as PDF format
+
+.         
+.         
+. 
+. *******************************************************************************
+. *                             BUBBLES                                         *
+. *******************************************************************************
+. 
+. preserve
+
+. 
+. collapse physProx_weightedIndex exposure_weightedIndex critNumber_weightedIndex ///
+>         HomeWork_weightedIndex twoDigitSum_LFS ///
+>         if K_age_12 <= 10 [pweight = K_fweight], by(K_noc_40)
+
+. 
+. sum HomeWork_weightedIndex, detail
+
+                (mean) HomeWork_weightedIndex
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0              0
+ 5%            0              0
+10%            0              0       Obs                  40
+25%     1.121494              0       Sum of wgt.          40
+
+50%       12.828                      Mean           34.41858
+                        Largest       Std. dev.      36.32163
+75%     66.56956       87.41797
+90%     86.32821       99.33794       Variance       1319.261
+95%     99.66897            100       Skewness       .4866496
+99%          100            100       Kurtosis       1.650618
+
+. gen HomeWorkQuart = .
+(41 missing values generated)
+
+. replace HomeWorkQuart = 1 if HomeWork_weightedIndex < r(p25)
+(10 real changes made)
+
+. replace HomeWorkQuart = 2 if HomeWork_weightedIndex > r(p25) & HomeWork_weightedIndex < r(p50)
+(10 real changes made)
+
+. replace HomeWorkQuart = 3 if HomeWork_weightedIndex > r(p50) & HomeWork_weightedIndex < r(p75)
+(10 real changes made)
+
+. replace HomeWorkQuart = 4 if HomeWork_weightedIndex > r(p75) & !missing(HomeWork_weightedIndex)
+(10 real changes made)
+
+. 
+. sum critNumber_weightedIndex, detail
+
+               (mean) critNumber_weightedIndex
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0              0
+ 5%     4.247772              0
+10%     10.74501       8.495543       Obs                  40
+25%      36.6811       10.26797       Sum of wgt.          40
+
+50%     78.35535                      Mean           63.48136
+                        Largest       Std. dev.      33.45362
+75%     91.29008            100
+90%     98.17056            100       Variance       1119.145
+95%          100            100       Skewness       -.616247
+99%          100            100       Kurtosis       1.917251
+
+. gen critWorkerQuart = .
+(41 missing values generated)
+
+. replace critWorkerQuart = 1 if critNumber_weightedIndex < r(p25)
+(10 real changes made)
+
+. replace critWorkerQuart = 2 if critNumber_weightedIndex > r(p25) & critNumber_weightedIndex < r(p50)
+(10 real changes made)
+
+. replace critWorkerQuart = 3 if critNumber_weightedIndex > r(p50) & critNumber_weightedIndex < r(p75)
+(10 real changes made)
+
+. replace critWorkerQuart = 4 if critNumber_weightedIndex > r(p75) & !missing(critNumber_weightedIndex)
+(10 real changes made)
+
+. 
+. 
+. gen lab = ""
+(41 missing values generated)
+
+. replace lab = "Professional Occupations in Nursing" if K_noc_40 == 12
+variable lab was str1 now str35
+(1 real change made)
+
+. replace lab = "Occupations in Front-Line Public Protection"  if K_noc_40 == 19
+variable lab was str35 now str43
+(1 real change made)
+
+. // replace lab = "Professional Occupations in Art and Culture" if K_noc_40 == 21
+. // replace lab = "Specialized Middle Management Occupations" if K_noc_40 == 2
+. replace lab = "Transport and Heavy Equipment Operation " if K_noc_40 == 32
+(1 real change made)
+
+. replace lab = "Finance, Insurance and Related Business |" if K_noc_40 == 7
+(1 real change made)
+
+. 
+. // March 2 - Update 
+.         replace lab = "Office Support Occupations" if K_noc_40 == 8
+(1 real change made)
+
+.         replace lab = "Care Providers & Educational, legal & Public Protection Support Occupations" if K_noc_40 == 20
+variable lab was str43 now str75
+(1 real change made)
+
+.         replace lab = "Sales Support Occupations" if K_noc_40 == 27
+(1 real change made)
+
+. 
+. 
+. gen highlight = 1 if inlist(K_noc_40,8)
+(40 missing values generated)
+
+. gen lowlight = 1 if inlist(K_noc_40,12,19,20)
+(38 missing values generated)
+
+. gen medlight = 1 if inlist(K_noc_40,27,7,32)
+(38 missing values generated)
+
+. /*
+> gen lowlight = 1 if soc == "533099"
+> */
+. 
+. 
+. 
+. // RAW CORRELATION for the index of Figure 1
+.         corr exposure_weightedIndex physProx_weightedIndex HomeWork_weightedIndex critNumber_weightedIndex
+(obs=40)
+
+             | exposu~x physPr~x HomeWo~x critNu~x
+-------------+------------------------------------
+exposure_w~x |   1.0000
+physProx_w~x |   0.7922   1.0000
+HomeWork_w~x |  -0.2695  -0.4972   1.0000
+critNumber~x |   0.2080   0.1131  -0.4547   1.0000
+
+
+. 
+. /* Taylor's Style */
+. // ssc install blindschemes, replace 
+.  set scheme plotplainblind 
+
+.  
+.  
+. /* 
+> *
+> * Exposure X Physical
+> * Circles that are Work from Home 
+> *
+> */ 
+. scatter exposure_weightedIndex physProx_weightedIndex if highlight == 1, msymbol(none) mlabposition(2) mlabel(lab) mlab
+> color("black")  || ///
+> scatter exposure_weightedIndex physProx_weightedIndex if medlight == 1, msymbol(none) mlabposition(3) mlabel(lab) mlabc
+> olor("black")  || ///
+> scatter exposure_weightedIndex physProx_weightedIndex if lowlight == 1, msymbol(none) mlabposition(9) mlabel(lab) mlabc
+> olor("black") || ///
+> scatter exposure_weightedIndex physProx_weightedIndex  if HomeWorkQuart == 1 [w=twoDigitSum_LFS], msymbol(Oh)  || ///
+> scatter exposure_weightedIndex physProx_weightedIndex  if HomeWorkQuart == 2 [w=twoDigitSum_LFS], msymbol(Oh)  || ///
+> scatter exposure_weightedIndex physProx_weightedIndex  if HomeWorkQuart == 3 [w=twoDigitSum_LFS], msymbol(Oh) || ///
+> scatter exposure_weightedIndex physProx_weightedIndex  if HomeWorkQuart == 4 [w=twoDigitSum_LFS], msymbol(Oh) || ///
+> scatter exposure_weightedIndex physProx_weightedIndex  if highlight == 1 [w=twoDigitSum_LFS], msymbol(Oh) mcolor("black
+> ") ||  ///
+> scatter exposure_weightedIndex physProx_weightedIndex  if medlight == 1 [w=twoDigitSum_LFS], msymbol(Oh) mcolor("black"
+> ) ||  ///
+> scatter exposure_weightedIndex physProx_weightedIndex  if lowlight == 1 [w=twoDigitSum_LFS], msymbol(Oh) mcolor("black"
+> ) || , ///
+>         legend(rows(2) position(6) order (4 "Remote Work 1st Quartile" 5 "Remote Work 2nd Quartile" ///
+>         6 "Remote Work 3rd Quartile" 7 "Remote Work 4th Quartile")) ytitle("Exposure to infection/disease") xtitle("Phy
+> sical proximity to coworkers")
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+
+. 
+. graph export "ReplicationFolder_CJE_Covid/Figures/bubblesExposureAndProx_HomeWorkQuartiles.pdf", as(pdf) replace
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/bubblesExposureAndProx_HomeWorkQuartiles.pdf saved as PDF format
+
+. 
+. 
+. /* 
+> *
+> * Exposure X Physical 
+> * Circles that are Critical Worker 
+> *
+> */ 
+. 
+. // Drop the lights 
+. drop *light
+
+. 
+. gen highlight = 1 if inlist(K_noc_40,8)
+(40 missing values generated)
+
+. gen lowlight = 1 if inlist(K_noc_40,12,19,20)
+(38 missing values generated)
+
+. gen medlight = 1 if inlist(K_noc_40,27,7,32)
+(38 missing values generated)
+
+. 
+. scatter exposure_weightedIndex physProx_weightedIndex if highlight == 1, msymbol(none) mlabposition(2) mlabel(lab) mlab
+> color("black")  || ///
+> scatter exposure_weightedIndex physProx_weightedIndex if medlight == 1, msymbol(none) mlabposition(3) mlabel(lab) mlabc
+> olor("black")  || ///
+> scatter exposure_weightedIndex physProx_weightedIndex if lowlight == 1, msymbol(none) mlabposition(9) mlabel(lab) mlabc
+> olor("black") || ///
+> scatter exposure_weightedIndex physProx_weightedIndex  if critWorkerQuart == 1 [w=twoDigitSum_LFS], msymbol(Oh)  || ///
+> scatter exposure_weightedIndex physProx_weightedIndex  if critWorkerQuart == 2 [w=twoDigitSum_LFS], msymbol(Oh)  || ///
+> scatter exposure_weightedIndex physProx_weightedIndex  if critWorkerQuart == 3 [w=twoDigitSum_LFS], msymbol(Oh) || ///
+> scatter exposure_weightedIndex physProx_weightedIndex  if critWorkerQuart == 4 [w=twoDigitSum_LFS], msymbol(Oh) || ///
+> scatter exposure_weightedIndex physProx_weightedIndex  if highlight == 1 [w=twoDigitSum_LFS], msymbol(Oh) mcolor("black
+> ") ||  ///
+> scatter exposure_weightedIndex physProx_weightedIndex  if medlight == 1 [w=twoDigitSum_LFS], msymbol(Oh) mcolor("black"
+> ) ||  ///
+> scatter exposure_weightedIndex physProx_weightedIndex  if lowlight == 1 [w=twoDigitSum_LFS], msymbol(Oh) mcolor("black"
+> ) || , ///
+>         legend(rows(2) position(6) order (4 "Critical Work 1st Quartile" 5 "Critical Work 2nd Quartile" ///
+>         6 "Critical Work 3rd Quartile" 7 "Critical Work 4th Quartile")) ytitle("Exposure to infection/disease") xtitle(
+> "Physical proximity to coworkers")
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+
+. 
+. graph export "ReplicationFolder_CJE_Covid/Figures/bubblesExposureAndProx_critWorkerQuartiles.pdf", as(pdf) replace
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/bubblesExposureAndProx_critWorkerQuartiles.pdf saved as PDF format
+
+. 
+. 
+. 
+. /* 
+> *
+> * Exposure X Remote Worker 
+> * Circles that are Critical Worker 
+> *
+> */ 
+. 
+. // Replace the highlight/lowlights
+. drop *light 
+
+. gen highlight = 1       if inlist(K_noc_40,7,8)
+(39 missing values generated)
+
+. gen lowlight = 1        if inlist(K_noc_40,12,19,32,27)
+(37 missing values generated)
+
+. gen medlight = 1        if inlist(K_noc_40,20)
+(40 missing values generated)
+
+. 
+. 
+. scatter exposure_weightedIndex HomeWork_weightedIndex if highlight == 1, msymbol(none) mlabposition(7) mlabel(lab) mlab
+> color("black")  || ///
+> scatter exposure_weightedIndex HomeWork_weightedIndex if lowlight == 1, msymbol(none) mlabposition(4) mlabel(lab) mlabc
+> olor("black") || ///
+> scatter exposure_weightedIndex HomeWork_weightedIndex if medlight == 1, msymbol(none) mlabposition(6) mlabel(lab) mlabc
+> olor("black") || ///
+> scatter exposure_weightedIndex HomeWork_weightedIndex  if critWorkerQuart == 1 [w=twoDigitSum_LFS], msymbol(Oh)  || ///
+> scatter exposure_weightedIndex HomeWork_weightedIndex  if critWorkerQuart == 2 [w=twoDigitSum_LFS], msymbol(Oh)  || ///
+> scatter exposure_weightedIndex HomeWork_weightedIndex  if critWorkerQuart == 3 [w=twoDigitSum_LFS], msymbol(Oh) || ///
+> scatter exposure_weightedIndex HomeWork_weightedIndex  if critWorkerQuart == 4 [w=twoDigitSum_LFS], msymbol(Oh) || ///
+> scatter exposure_weightedIndex HomeWork_weightedIndex  if highlight == 1 [w=twoDigitSum_LFS], msymbol(Oh) mcolor("black
+> ") ||  ///
+> scatter exposure_weightedIndex HomeWork_weightedIndex  if lowlight == 1 [w=twoDigitSum_LFS], msymbol(Oh) mcolor("black"
+> ) ||  ///
+> scatter exposure_weightedIndex HomeWork_weightedIndex  if medlight == 1 [w=twoDigitSum_LFS], msymbol(Oh) mcolor("black"
+> ) || , ///
+>         legend(rows(2) position(6) order (4 "Critical Work 1st Quartile" 5 "Critical Work 2nd Quartile" ///
+>         6 "Critical Work 3rd Quartile" 7 "Critical Work 4th Quartile")) ytitle("Exposure to infection/disease") xtitle(
+> "Work from Home")
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+(analytic weights assumed)
+
+. 
+. graph export "ReplicationFolder_CJE_Covid/Figures/bubblesExposureAndHomeWork_critWorkerQuartiles.pdf", as(pdf) replace
+file /Users/yushi/Documents/GitHub/replication-challenge/modify
+    codes/Data/ReplicationFolder_CJE_Covid/Figures/bubblesExposureAndHomeWork_critWorkerQuartiles.pdf saved as PDF
+    format
+
+. 
+. restore 
+
+. 
+. /* timer */
+.         timer off 12 
+
+.         timer list 
+   1:      0.00 /        1 =       0.0000
+   9:      3.27 /        1 =       3.2740
+  12:    183.52 /        1 =     183.5180
+
+. 
+end of do-file
+
+. 
+end of do-file
+

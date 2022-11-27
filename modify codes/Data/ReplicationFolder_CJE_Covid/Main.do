@@ -134,15 +134,14 @@ cap log using "`logprefix'_`cdate'.log", replace text
 
 
 *** Add the missing package ***
-* grstyle doesn't work, still doesn't work
-* boottest not working if you don't include
-
+* ado for grstyle, palettes, colrspace,  boottest don't work
+* need to reinstall them
 
 program main
 	* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	* Add required packages from SSC to this list
 	* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	local ssc_packages grstyle boottest ///
+	local ssc_packages grstyle boottest palettes colrspace ///
 	    
     if !missing("`ssc_packages'") {
         foreach pkg in `ssc_packages' {
