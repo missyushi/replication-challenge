@@ -11,9 +11,6 @@
 
 ## General
 
-
-> INSTRUCTIONS: Check off the following sections/elements that you find in either the README provided by the authors, or in the authors' online appendix (rare).
-
 - [X] Data Availability and Provenance Statements
   - [ ] Statement about Rights
   - [ ] License for Data
@@ -192,13 +189,6 @@ There are 27 provided Stata do files, plus a "master.do".
 
 
 ## Replication steps
-
-> INSTRUCTIONS: provide details about your process of accessing the code and data.
-> Do NOT detail things like "I save them on my Desktop".
-> DO describe actions   that you did  as per instructions ("I added a config.do")
-> DO describe any other actions you needed to do ("I had to make changes in multiple programs"), without going into detail (the commit log can provide that information)
-
-Example:
 
 1. Downloaded code and data from the dataverse.
 2. Inside the downloaded file, unzipped Data(1).zip, which contains all the data and codes.
