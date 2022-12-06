@@ -35,37 +35,39 @@
 
 ### Data Sources
 
-> INSTRUCTIONS: Identify all INPUT data sources. Create a list (and commit the list together with this report) (not needed if filling out the "Data Citation and Information report"). For each data source, list in THIS document presence or absence of source, codebook/information on the data, and summary statistics. Summary statistics and codebook may not be necessary if they are available for public use data. In all cases, if the author of the article points to an online location for such information, that is OK. IN THIS DOCUMENT, point out only a summary of shortcomings.
+#### Labor Force Survey, Statistics Canada
 
-> INSTRUCTIONS: For all data sources, check for a data citation. Oftentimes authors will cite the **paper** in which a dataset is originally used, but this is not a *data* citation. If you have found what you think to be a data citation, quote it in the report as shown below for the "Example data". 
+- Public available data set.
+- The raw data set is not provided, but the cleaning code is provided.
+- The data is cited in the README, but not in the references section of the manuscript.
 
-#### Example data
 
-- Dataset is not provided, but a link is provided in the README
-- Access conditions are not described. It turns out, the website requires registration and payment of a fee
-- The data are cited in the references section of the manuscript and the README. Data citation:
+#### Canadian Perspective Survey Series
 
-> Bureau of Labor Statistics. 2000–2010. “Current Employment Statistics: Colorado, Total Nonfarm, Seasonally adjusted - SMS08000000000000001.” United States Department of Labor. http://data.bls.gov/cgi-bin/surveymost?sm+08 (accessed February 9, 2011).
+- Public available data set.
+- The raw data set is not provided, but the cleaning code is provided.
+- The data is cited in the README, but not in the references section of the manuscript.
+
+
 
 ### Analysis Data Files
 
-> INSTRUCTIONS: Separately, identify any analysis data file provided. Analysis data files are produced by code in the deposit from data sources. Not every deposit will have these.
-
 - [ ] No analysis data file mentioned
 - [ ] Analysis data files mentioned, not provided (explain reasons below)
-- [ ] Analysis data files mentioned, provided. File names listed below.
+- [X] Analysis data files mentioned, provided. File names listed below.
 
-> INSTRUCTIONS: List all provided filenames here. For large deposits, this can be done using the "Git Bash" program:
-> > find . -name \*.dta
-> will list all Stata datasets. Replace `dta` with `.Rdata` or any other extension to find other datafiles.
-
-Example:
 
 ```
-./Output_Empirical/data/census_shp/counties_coord.dta
-./Output_Empirical/data/census_shp/counties_db.dta
-./Output_Empirical/data/census_shp/state_coord.dta
-./Output_Empirical/data/census_shp/state_db.dta
+./ReplicationFolder_CJE_Covid/Data/dtaFiles/DingleNieman_workFromHome_onet.dta
+./ReplicationFolder_CJE_Covid/Data/dtaFiles/mainDataset_CPSS.dta
+./ReplicationFolder_CJE_Covid/Data/dtaFiles/onetExposure_diseaseAndInfection.dta
+./ReplicationFolder_CJE_Covid/Data/dtaFiles/onetExposure_physicalProximity.dta
+./ReplicationFolder_CJE_Covid/Data/dtaFiles/onetToNoc.dta
+./ReplicationFolder_CJE_Covid/Data/dtaFiles/SOC_criticalInfrastructureWorkers.dta
+./ReplicationFolder_CJE_Covid/Data/dtaFiles/toBeMerged_allItemsCPI_Jan2018_Dec2020.dta
+./ReplicationFolder_CJE_Covid/Data/dtaFiles/twoDigit_indices.dta
+./ReplicationFolder_CJE_Covid/Data/dtaFiles/EventStudy.dta
+./ReplicationFolder_CJE_Covid/Data/dtaFiles/mainDataset.dta
 ```
 
 ## Data deposit
@@ -74,32 +76,20 @@ Example:
 
 ### Requirements 
 
-> INSTRUCTIONS: Check that these requirements are met. All of these should be met for openICPSR deposits, for other deposits, check out [this page](https://aeadataeditor.github.io/aea-de-guidance/guidelines-other-repositories).
 
-- [ ] README is in TXT, MD, PDF format
+- [X] README is in TXT, MD, PDF format
 - [ ] Deposit has no ZIP files
-- [ ] Title conforms to guidance (starts with "Data and Code for:" or "Code for:", is properly capitalized)
-- [ ] Authors (with affiliations) are listed in the same order as on the paper
+- [X] Title conforms to guidance (starts with "Data and Code for:" or "Code for:", is properly capitalized)
+- [X] Authors (with affiliations) are listed in the same order as on the paper
 
-> INSTRUCTIONS: If any of the above are NOT checked, leave the related [REQUIRED] element here. Otherwise, delete the line.
 
-> [REQUIRED] Please ensure that a ASCII (txt), Markdown (md), or PDF version of the README are available in the data and code deposit.
-
-> [REQUIRED] Deposit should not have ZIP files visible. 
-  - on openICPSR: ZIP files should be uploaded to openICPSR via "Import from ZIP" instead of "Upload Files". Please delete the ZIP files, and re-upload using the "Import from ZIP" function.
-  - on other platforms: Please consult with your repository helpdesk how to "import from ZIP".
-
-> [REQUIRED] Please review the title of the deposit as per our guidelines (below).
-
-> [REQUIRED] Please review authors and affiliations on the deposit. In general, they are the same, and in the same order, as for the manuscript; however, authors can deviate from that order.
-
-> INSTRUCTIONS: Leave the following line in the report if any of the above are checked:
+```
+- In the deposit, there is a ZIP file called Data (1).zip, which contains all the data, programs, and results
+```
 
 > Detailed guidance is at [https://aeadataeditor.github.io/aea-de-guidance/](https://aeadataeditor.github.io/aea-de-guidance/), for non-ICPSR deposits, check out [this guidance](https://aeadataeditor.github.io/aea-de-guidance/guidelines-other-repositories).
 
 ### Deposit Metadata
-
-> INSTRUCTIONS: Some of these are specific to openICPSR (JEL, Manuscript Number). Others may or may not be present at other trusted repositories (Dataverse, Zenodo, etc.). Verify all items for openICPSR, check with supervisor for other deposits.
 
 - [ ] JEL Classification (required)
 - [ ] Manuscript Number (required)
@@ -112,73 +102,68 @@ Example:
 - [ ] Data Source (suggested)
 - [ ] Units of Observation (suggested)
 
-> INSTRUCTIONS: Go through the checklist above, and then choose ONE of the following results:
-
-- [NOTE] openICPSR metadata is sufficient.
-
-or
-
-- [REQUIRED] Please update the openICPSR metadata fields marked as (required), in order to improve findability of your data and code supplement. 
-
-and/or
-
-- [SUGGESTED] We suggest you update the openICPSR metadata fields marked as (highly recommended), in order to improve findability of your data and code supplement. 
-- [SUGGESTED] We suggest you update the openICPSR metadata fields marked as (suggested), in order to improve findability of your data and code supplement. 
-
-
 For additional guidance, see [https://aeadataeditor.github.io/aea-de-guidance/data-deposit-aea-guidance.html](https://aeadataeditor.github.io/aea-de-guidance/data-deposit-aea-guidance.html).
 
 ## Data checks
 
-> INSTRUCTIONS: When data are present, run checks:
-> - can data be read (using software indicated by author)?
-> - Are datasets in archive-ready formats (CSV, TXT) or in custom formats (DTA, SAS7BDAT, Rdata)? Note: Numbers and Mathematica data files are not considered archive-safe and cannot be accepted. 
-> - Do the data files have variable labels (Stata: run `describe using (name of DTA)` and check that there is content in the column "variable label")?
-> - Run check for PII ([PII_stata_scan.do](PII_stata_scan.do), sourced from [here](https://github.com/J-PAL/stata_PII_scan) if using Stata) and report results. Note: this check will have lots of false positives - fields it thinks might be sensitive that are not, in fact, sensitive. Apply judgement.
+- Data can be read.
+- Datasets are in custom formats (DTA).
+- Most of the variables have variable labels.
 
 
 ## Code description
 
-> INSTRUCTIONS: Review the code (but do not run it yet). Identify programs that create "analysis files" ("data preparation code"). Identify programs that create tables and figures. Not every deposit will have separate programs for this.
+There are 27 provided Stata do files, plus a "master.do".
+- [X] The replication package contains a "main" or "master" file(s) which calls all other auxiliary programs.
 
-> INSTRUCTIONS: Identify all **Figure, Table, and any in-text numbers**. Create a list, mapping each of them to a particular program and line number within the program (use [this template](code-check-TEMPLATE.xlsx)). Commit that list. You will come back to the list in your findings. IN THIS SECTION, point out only a summary description, including of shortcomings. E.g.
+### Tables
+- Table 1, Tables_SummaryStatistics_MainRegressions.do
+- Table 2, Tables_SummaryStatistics_NOCMeans.do
+- Table 3, Tables_SummaryStatistics_demographics.do
+- Table 4 and 5, Tables_Regressions_BeforeAndAfter.do
+- Table 6, Tables_Regressions_Indexes_Interacted.do
+- Table 7, Tables_Regressions_Indexes_Interacted_nonHealthCareWorkers.do
+- Table 8 and 9, Tables_Regressions_CPSS.do
+- Table A1, not generated by the codes
+- Table A2, Tables_Regressions_CPSS.do
+- Table A3, Tables_ComparingLFS_And_CPSS.do
+- Table A4 and A5, Tables_Regressions_BeforeAndAfter_appendix.do
+- Table A6, Tables_Regressions_ReasonAwayFromWork.do
+- Table A7, Tables_Regressions_Indexes_Interacted_appendix.do
+- Table A8, Tables_Regressions_Indexes_Interacted_nonHealthCareWorkers_appendix.do
+- Table A9, Tables_Regressions_Indexes_Interacted_AlternativeIndexForEssentialWorker.do
+- Table A10, Tables_Regressions_Indexes_Interacted_AlternativeIndexForEssentialWorker_appendix.do
+- Table A11-A14, Tables_Regressions_Heterogeneity_appendix.do
+- Table A15, Tables_Regressions_CPSS.do
+- Table A16 and A17, Tables_SummaryStatistics_NOC_Difference_BeforeAndAfter_appendix.do
 
-There are four provided Stata do files, three Matlab .m files, including a "master.do".
+### Figures
+- Figure 1, Figures_CasesAndMortalities.do
+- Figure 2-5, Figures_TimeSeriesAndBubbles.do
+- Figure 6, Figures_Difference_Occupations.do
+- Figure 7 and 8, Figures_EventStudies_Indexes.do
+- Figure A1-A3, Figures_CasesAndMortalities.do
+- Figure A4-A15, Figures_TimeSeriesAndBubbles.do
+- Figure A16 and A17, Figures_EventStudies_Indexes.do
 
-- Table 5: could not identify code that produces Table 5
-- Neither the program codes, nor the README, identify which tables are produced by what program.
 
-- [ ] The replication package contains a "main" or "master" file(s) which calls all other auxiliary programs.
-
-> INSTRUCTIONS: If the above checkbox for "main" file is NOT checked, leave the following SUGGESTION in the report!
-
-> [SUGGESTED] We strongly advise the use of a single (or a small number of) main control file(s) to automatically reproduce all figures and tables in the paper, without manual interaction.
-
-> NOTE: In-text numbers that reference numbers in tables do not need to be listed. Only in-text numbers that correspond to no table or figure need to be listed.
 
 ## Stated Requirements
 
-> INSTRUCTIONS: The authors may have specified specific requirements in terms of software, computer hardware, etc. Please list them here. This is **different** from the Computing Environment of the Replicator. You have the option to amend these with unstated requirements later. If all requirements are listed, check the box "Requirements are complete".
 
 - [ ] No requirements specified
-- [ ] Software Requirements specified as follows:
-  - Software 1
-  - Software 2
-- [ ] Computational Requirements specified as follows:
+- [X] Software Requirements specified as follows:
+  - Stata
+  - Stata packages: estout, boottest, coefplot, unique, blindschemes, grstyle, palettes, colrspace
+- [X] Computational Requirements specified as follows:
   - Cluster size, etc.
-- [ ] Time Requirements specified as follows:
+- [X] Time Requirements specified as follows:
   - Length of necessary computation (hours, weeks, etc.)
 
-- [ ] Requirements are complete.
-
-> INSTRUCTIONS: If easier, simply copy-and-paste the authors' stated requirements here:
+- [X] Requirements are complete.
 
 
 ## Missing Requirements
-
-> INSTRUCTIONS: If the replication package contains Stata programs run `tools/Stata_scan_code/scan_packages.do`, ensuring that you update the global `codedir` first. If the data is accessible, add any packages not mentioned in the README to the `config.do` and paste the excel output as a table below. If the data is restricted-access and not obtainable in a reasonable amount of time, paste the excel output as a table below.
-
-> INSTRUCTIONS: If it turns out that some requirements were not stated/ are incomplete (software, packages, operating system), please list the *missing* list of requirements here. Remove lines that are not necessary. If the stated requirements are complete, delete this entire section, including the [REQUIRED] tag at the end.
 
 - [ ] Software Requirements 
   - [ ] Stata
@@ -198,32 +183,13 @@ There are four provided Stata do files, three Matlab .m files, including a "mast
 - [ ] Time Requirements 
   - Length of necessary computation (hours, weeks, etc.)
 
-> [REQUIRED] Please amend README to contain complete requirements. 
 
-You can copy the section above, amended if necessary.
 
 ## Computing Environment of the Replicator
 
-> INSTRUCTIONS: This might be automated, for now, please fill in manually. Remove examples that are not relevant, adjust examples to fit special circumstances. Some of this is available from the standard log output in Stata or R. Some frequently used details are below. Some of these details can be found as follows:
->
-> - (Windows) by right-clicking on "This PC"
-> - (Mac) Apple-menu > "About this Mac"
-> - (Linux) see code in `tools/linux-system-info.sh`
->
-> Some options are listed below. Choose the one that applies.
+- Macbook Pro, MacOS 12.6, Chip Apple M2, 16 GB of memory
+- Stata 17
 
-- Mac Laptop, MacOS 10.14.6, 8 GB of memory
-- CISER Shared Windows Server 2019, 256GB, Intel Xeon E5-4669 v3 @ 2.10Ghz (2 processors, 36 cores)
-- CISER Virtual Windows Server 2016, 16GB, Intel Haswell 2.19 Ghz (2 cores)
-- BioHPC Linux server, Centos 7.6, 64 cores; 1024GB RAM; 
-- WholeTale (describe the environment chosen)
-- CodeOcean (describe the type of capsule chosen) Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz (8 cores)
-
-> INSTRUCTIONS: Please also list the software you used (specific versions). List only the ones you used, add any not listed in the examples:
-
-- Stata/MP 16.1
-- Matlab R2019a
-- Intel Compiler 3.14152 (note: there is no such thing, so please verify the version!)
 
 ## Replication steps
 
@@ -234,83 +200,57 @@ You can copy the section above, amended if necessary.
 
 Example:
 
-1. Downloaded code from URL provided.
-2. Downloaded data from URL indicated in the README. A sign-up was required (not indicated in README)
-3. Added the config.do generating system information.
-4. Ran code as per README, but the third step did not work.
-5. Made changes to the way the third step is run to get it to work.
+1. Downloaded code and data from the dataverse.
+2. Inside the downloaded file, unzipped Data(1).zip, which contains all the data and codes.
+3. Added the log file.
+4. Added Stata packages grstyle, boottest, palettes, colrspace. The ados are provided, but somehow they don't work.
+5. Run the Main.do
 
 ## Findings
 
-> INSTRUCTIONS: Describe your findings both positive and negative in some detail, for each **Data Preparation Code, Figure, Table, and any in-text numbers**. You can re-use the Excel file created under *Code Description*. When errors happen, be as precise as possible. For differences in figures, provide both a screenshot of what the manuscript contains, as well as the figure produced by the code you ran. For differences in numbers, provide both the number as reported in the manuscript, as well as the number replicated. If too many numbers, contact your supervisor.
-
-### Data Preparation Code
-
-Examples:
-
-- Program `1-create-data.do` ran without error, output expected data
-- Program `2-create-appendix-data.do` failed to produce any output.
-
 ### Tables
 
-Examples:
-
 - Table 1: Looks the same
-- Table 2: (contains no data)
-- Table 3: Minor differences in row 5, column 3, 0.003 instead of 0.3
+- Table 2: Looks the same
+- Table 3: Looks the same
+- Table 4 and 5: Look the same
+- Table 6: Looks the same
+- Table 7: Looks the same
+- Table 8 and 9: Look the same
+- Table A1: Looks the same
+- Table A2: Looks the same
+- Table A3: Looks the same
+- Table A4 and A5: Look the same
+- Table A6: Looks the same
+- Table A7: Looks the same
+- Table A8: Looks the same
+- Table A9: Looks the same
+- Table A10: Looks the same
+- Table A11-A14: Look the same
+- Table A15: Looks the same
+- Table A16 and A17, Look the same
 
 ### Figures
 
-> INSTRUCTIONS: Please provide a comparison with the paper when describing that figures look different. Use a screenshot for the paper, and the graph generated by the programs for the comparison. Reference the graph generated by the programs as a local file within the repository.
-
-Example:
-
 - Figure 1: Looks the same
-- Figure 2: no program provided
-- Figure 3: Paper version looks different from the one generated by programs:
+- Figure 2-5: Look the same
+- Figure 6: Looks the same
+- Figure 7 and 8: Look the same
+- Figure A1-A3: Look the same
+- Figure A4-A15: Look the same
+- Figure A16 and A17: Look the same
 
-Paper version:
-![Paper version](template/dog.jpg)
 
-Figure 3 generated by programs:
-
-![Replicated version](template/odie.jpg)
-
-### In-Text Numbers
-
-> INSTRUCTIONS: list page and line number of in-text numbers. If ambiguous, cite the surrounding text, i.e., "the rate fell to 52% of all jobs: verified".
-
-[ ] In-text numbers not verified.
-
-[ ] There are no in-text numbers, or all in-text numbers stem from tables and figures.
-
-[ ] There are in-text numbers, but they are not identified in the code
-
-- Page 21, line 5: Same
 
 
 ## Classification
 
-> INSTRUCTIONS: Make an assessment here.
->
-> Full reproduction can include a small number of apparently insignificant changes in the numbers in the table. Full reproduction also applies when changes to the programs needed to be made, but were successfully implemented.
->
-> Partial reproduction means that a significant number (>25%) of programs and/or numbers are different.
->
-> Note that if some data is confidential and not available, then a partial reproduction applies. This should be noted in the Reasons.
->
-> Note that when all data is confidential, it is unlikely that this exercise should have been attempted.
->
-> Failure to reproduce: only a small number of programs ran successfully, or only a small number of numbers were successfully generated (<25%). This also applies when all data is restricted-access and none of the **main** tables/figures are run.
-
-- [ ] full reproduction
+- [X] full reproduction
 - [ ] full reproduction with minor issues
 - [ ] partial reproduction (see above)
 - [ ] not able to reproduce most or all of the results (reasons see above)
 
 ### Reason for incomplete reproducibility
-
-> INSTRUCTIONS: mark the reasons here why full reproduciblity was not achieved, and enter this information in JIRA
 
 - [ ] `Discrepancy in output` (either figures or numbers in tables or text differ)
 - [ ] `Bugs in code`  that  were fixable by the replicator (but should be fixed in the final deposit)
