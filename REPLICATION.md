@@ -1,57 +1,35 @@
-# [MC number] [Manuscript Title] Validation and Replication results
+# [10.1111/caje.12543] [The short-term economic consequences of COVID-19: Occupation tasks and mental health in Canada] Validation and Replication results
 
-> INSTRUCTIONS: Once you've read these instructions, DELETE THESE AND SIMILAR LINES.
-> In the above title, replace [Manuscript Title] with the actual title of the paper, and [MC number] with the Manuscript Central number (e.g., AEJPol-2017-0097)
-> Go through the steps to download and attempt a replication. Document your steps here, the errors generated, and the steps you took to alleviate those errors.
-
-> Some useful links:
-> - [Official Data and Code Availability Policy](https://www.aeaweb.org/journals/policies/data-code)
-> - [Step by step guidance](https://aeadataeditor.github.io/aea-de-guidance/) 
-> - [Template README](https://social-science-data-editors.github.io/template_README/)
 
 ## SUMMARY
 
-> INSTRUCTION: The Data Editor will fill this part out. It will be based on any [REQUIRED] and [SUGGESTED] action items that the report makes a note of. 
 
-### Action Items (manuscript)
+### Action Items (manuscript) 10.1111/caje.12543
 
-### Action Items (openICPSR)
+### Action Items (openICPSR) https://doi.org/10.5683/SP3/M4H6WC
 
------action items go here------
-
-> INSTRUCTION: leave this in.
-
-> The openICPSR submission process has changed. If you have not already done so, please "Change Status -> Submit to AEA" from your deposit Workspace.
-
-> [NOTE] Since July 1, 2021, we will publish replication packages as soon as all requested changes to the deposit have been made. Please process any requested changes as soon as possible.
-
-> INSTRUCTION: ALWAYS do "Data description", "Code description". If data is present, ALWAYS do "Data checks". If time is sufficient (initial assessment!), do "Replication steps", if not, explain why not.
 
 ## General
 
 
 > INSTRUCTIONS: Check off the following sections/elements that you find in either the README provided by the authors, or in the authors' online appendix (rare).
 
-- [ ] Data Availability and Provenance Statements
+- [X] Data Availability and Provenance Statements
   - [ ] Statement about Rights
   - [ ] License for Data
   - [ ] Details on each Data Source
-- [ ] Dataset list
-- [ ] Computational requirements
+- [X] Dataset list
+- [X] Computational requirements
   - [ ] Software Requirements
   - [ ] Controlled Randomness
   - [ ] Memory and Runtime Requirements
-- [ ] Description of programs/code
+- [X] Description of programs/code
   - [ ] (Optional, but recommended) License for Code
-- [ ] Instructions to Replicators
+- [X] Instructions to Replicators
   - [ ] Details
 - [ ] List of tables and programs
-- [ ] References
+- [X] References
 
-
-> INSTRUCTIONS: Leave this in, when any of the sections is lacking. Remove the entire section only if the README has all the pieces necessary (up to minor imprecisions).
-
-> [REQUIRED] As specified in the [Policy](https://www.aeaweb.org/journals/data/data-code-policy) and the [DCAF](https://www.aeaweb.org/journals/forms/data-code-availability), the README shall follow the schema provided by the [Social Science Data Editors' template README](https://social-science-data-editors.github.io/guidance/template-README.html).
 
 ## Data description
 
