@@ -2030,3 +2030,17 @@ end of do-file
 . 
 end of do-file
 
+. exit
+no; dataset in memory has changed since last saved
+    Save the data or specify option clear to exit anyway.
+r(4);
+
+. clear
+
+. clc
+command clc is unrecognized
+r(199);
+
+. cls
+
+. exit

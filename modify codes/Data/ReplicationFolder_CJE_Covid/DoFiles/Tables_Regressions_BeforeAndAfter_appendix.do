@@ -50,11 +50,11 @@ Version 6
 /* Just a reminder of the conditions that will be imposed on the regressions 
 	local  regConditions1 "if (K_age_12 <= 10) & (K_lfsstat != 3)" // restricted age + in the labour force 
 	local  regConditions2 "if (K_age_12 <= 10)" // restricted age */
-	//local  regConditions1 "if (K_age_12 <= 10) & (K_lfsstat != 3) & (K_cowmain <= 2)" // only observations we have $ for 
-	//local  regConditions2 "if (K_age_12 <= 10) & (K_lfsstat != 3) & (K_cowmain <= 2)" // only observations we have $ for
+	local  regConditions1 "if (K_age_12 <= 10) & (K_lfsstat != 3) & (K_cowmain <= 2)" // only observations we have $ for 
+	local  regConditions2 "if (K_age_12 <= 10) & (K_lfsstat != 3) & (K_cowmain <= 2)" // only observations we have $ for
 	
-	local  regConditions1 "if (K_age_12 <= 10) & (K_lfsstat != 3)" // robustness check
-	local  regConditions2 "if (K_age_12 <= 10) & (K_lfsstat != 3)" // robustness check
+	//local  regConditions1 "if (K_age_12 <= 10) & (K_lfsstat != 3)" // robustness check
+	//local  regConditions2 "if (K_age_12 <= 10) & (K_lfsstat != 3)" // robustness check
 	
 /* 
 NOTE! This restriction is redundant with the conditions but should help speed 
