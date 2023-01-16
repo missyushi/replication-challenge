@@ -225,9 +225,9 @@ There are 27 provided Stata do files, plus a "master.do".
 
 1. Downloaded code and data from the dataverse.
 2. Inside the downloaded file, unzipped Data(1).zip, which contains all the data and codes.
-3. Added the log file.
-4. Added Stata packages grstyle, boottest, palettes, colrspace. The ados are provided, but somehow they don't work.
-5. Run the Main.do
+3. Changed the pathway to my local computer. Created a log file.
+4. When running the code, Stata ran into trouble related to the following four packages grstyle, boottest, palettes, colrspace. The ados for the above four packages are provided, but somehow Stata couldn't recognize them. So, I added the installation codes again.
+5. Run the Main.do. Everything is now push-button reproducible.
 
 ## Findings
 
