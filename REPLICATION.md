@@ -45,6 +45,39 @@
 - The raw data set is not provided, but the cleaning code is provided.
 - The data is cited in the README, but not in the references section of the manuscript.
 
+#### O*NET Indexes
+- public available data set.
+- The raw data set is provided.
+- The data is cited in the README, but not in the references section of the manuscript.
+
+#### Dingel and Neiman Work from Home Index
+- The data set is provided.
+- The data set is cited.
+
+#### LMI Critical Workers Index
+- The data set is provided.
+- The data is cited in the README, but not in the references section of the manuscript.
+
+#### Crosswalk between NOC and O*NET
+- The data set is provided.
+- The data is cited in the README, but not in the references section of the manuscript.
+
+#### LMiC Index
+- The data set is provided.
+- The data is cited in the README, but not in the references section of the manuscript.
+
+#### Canadian National Occupation Classification Class of Worker (2016)
+- The data set is provided.
+- The data is cited in the README, but not in the references section of the manuscript.
+
+#### Canadian All-Items CPI
+- The data set is provided.
+- The data is cited in the README, but not in the references section of the manuscript.
+
+#### COVID-19 Mortality and Case Counts
+- The data set is provided.
+- The data set is cited.
+
 
 
 ### Analysis Data Files
