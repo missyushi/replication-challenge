@@ -226,8 +226,12 @@ There are 27 provided Stata do files, plus a "master.do".
 1. Downloaded code and data from the dataverse.
 2. Inside the downloaded file, unzipped Data(1).zip, which contains all the data and codes.
 3. Changed the pathway to my local computer. Created a log file.
-4. When running the code, Stata ran into trouble related to the following four packages grstyle, boottest, palettes, colrspace. The ados for the above four packages are provided, but somehow Stata couldn't recognize them. So, I added the installation codes again.
-5. Run the Main.do. Everything is now push-button reproducible.
+4. Ran the "Main.do". 
+5. Stata ran into problem "class ColrSpace undefined (error occurred while loading colorpalette.ado)"
+6. Installed the following Stata packages: grstyle, palettes, colrspace.
+7. The Stata ran into the problem: "<istmt>:  3499  boottest_stata() not found".
+8. Installed the boottest package.
+9. Ran the Main.do. Everything is now push-button reproducible.
 
 ## Findings
 
